@@ -1,0 +1,33 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+<div class="p-3" style="margin-top: 100px;">
+    {% if Login.return_url %}
+    <h3 class="text-danger">Please Login First</h3>
+    {% else %}
+    <div class="col-md-4 mx-auto border rounded-3 bg-warning shadow-lg p-4">
+        <h3 class="alert-dark text-center p-2">Login</h3>
+        {% if error %}
+        <p class="alert alert-danger border-danger">{{error}}</p>
+        {% endif %}
+        <form action="" method="post">
+            {% csrf_token %}
+    
+            <div class="form-group">
+                <label for="" class="m-1">Email</label>
+                <input type="email" class="form-control form-control-sm" name="inp_email" placeholder="Ex. abc@test.com" value="{{values.email}}">
+            </div>
+            <div class="form-group">
+                <label for="" class="m-1">Password</label>
+                <input type="password" class="form-control form-control-sm" name="inp_password" placeholder="Ex. 123abc*#">
+            </div>
+            <div class="form-group text-center">
+                <button type="submit" class="btn btn-secondary">Login</button>
+            </div>
+        </form>
+    </div>
+    {% endif %}
+</div>
+
+{% endblock %}

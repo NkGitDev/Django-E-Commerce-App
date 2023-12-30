@@ -1,0 +1,70 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+<!-- for add to cart  -->
+{% load cart %}
+
+
+    <h2>{{msg}}</h2>
+
+    
+    <div class="container-fluid" style="margin-top: 100px;">
+        <div class="row">
+            <h1>{{custName.firstName}}</h1>
+            <!-- Categoriy -->
+            <div class="col-md-3">
+                <div class="list-group">
+                    <a href="/" class="list-group-item list-group-item-action">All Products</a>
+                    {% for ctgry in categories %}
+                    <a href="/?category={{ctgry.id}}" class="list-group-item list-group-item-action">{{ctgry.cat_name}}</a>
+                    {% endfor %}
+                </div>
+            </div>
+
+            <!-- All Products -->
+            <div id="products" class="col-md-9">
+                <div class="row mx-auto">
+                    {% for pd in products %}
+                    <div id="{{pd.id}}" class="card border-success mb-3 mx-auto p-0 d-flex" style="max-width: 16rem; max-height: 28rem; min-width: 16rem;">
+                        <div class="card-header text-bg-dark">{{pd.prod_category}}</div>
+                        <div class="card-body mx-auto text-center">
+                            <img src="{{pd.prod_img.url}}" alt="" style="max-width: 14rem; max-height: 10rem;">
+                            <h6 class="card-title">{{pd.prod_name}}</h6>
+                            <h4 class="text-bg-danger rounded-5 p-0">Rs. {{pd.prod_price}}</h4> 
+                            <p class="card-text">{{pd.prod_desc}}</p>
+                        </div>
+                        <!-- {{ pd | is_in_cart:request.session.cart }} -->
+                        <div class="card-footer bg-body-secondary text-center">
+                            {% if pd|is_in_cart:request.session.cart %}
+                            <div class="row no-gutters">
+                                <form action="/#{{pd.id}}" method="post" class="col-3">
+                                    {% csrf_token %}
+                                    <input type="text" name="product" value="{{pd.id}}" hidden>
+                                    <input type="text" name="remove" value="True" hidden>
+                                    <input type="submit" value="-" class="btn btn-warning btn-block">
+                                </form>
+                                <div class="text-center col"><strong>{{ pd | cart_quantity:request.session.cart }} item in cart</strong></div>
+                                <form action="/#{{pd.id}}" method="post" class="col-3">
+                                    {% csrf_token %}
+                                    <input type="text" name="product" value="{{pd.id}}" hidden>
+                                    <input type="submit" value="+" class="btn btn-success btn-block">
+                                </form>
+                                
+                            </div>
+                            {% else %}
+                            <form action="/#{{pd.id}}" method="POST" class="m-0">
+                                {% csrf_token %}
+                                <input type="text" name="product" value="{{pd.id}}" hidden>
+                                <input type="submit" class="btn btn-secondary" value="Add to cart">
+                            </form>
+                            {% endif %}
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+    </div>
+
+{% endblock %}
